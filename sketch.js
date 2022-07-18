@@ -12,6 +12,8 @@ var squareSize = 175;
 function ask() {
     RowsNum = parseInt(prompt("Enter the number of Rows you want:"));
     ColsNum = parseInt(prompt("Enter the number of Columns you want:"));
+    clear();
+    MovesNum=0;
     generateBoard();
     drawBoard();
 }
@@ -78,7 +80,6 @@ function drawTile(x, y, value)
         text(value, x + squareSize / 2, y + squareSize / 2);
         pop();
     }
-    
 }
 
 function getTileValue(row, col)
@@ -93,12 +94,20 @@ function setTileValue(row, col, value)
     board[index] = value;
 }
 
+function loopp()
+{
+    clear();
+    
+    drawBoard();
+    displayStats();
+}
+
 function findClickedTile(x, y)
 {
     var col = Math.floor( (x - boardX) / squareSize );
     var row = Math.floor( (y - boardY) / squareSize );
     
-    if (col < 0 || col >= noCols || row < 0 || row >= noRows )
+    if (col < 0 || col >= ColsNum || row < 0 || row >= RowsNum )
     {
         return null;
     }
@@ -116,7 +125,7 @@ function findEmptyTile(row, col)
     }
     
     // check right tile if exists
-    if (col < noCols - 1)
+    if (col < ColsNum - 1)
     {
         if (getTileValue(row, col + 1) == 0)
             return { row : row, col : col + 1 };
@@ -131,7 +140,7 @@ function findEmptyTile(row, col)
     }
     
     // check down tile
-    if (row < noRows - 1)
+    if (row < RowsNum - 1)
     {
         if (getTileValue(row + 1, col) == 0)
             return { row : row + 1, col : col };
@@ -153,8 +162,37 @@ function switchTiles()
     var tileValue = getTileValue(tile.row, tile.col);
     setTileValue(emptyTile.row, emptyTile.col, tileValue);
     setTileValue(tile.row, tile.col, 0);
-    
     MovesNum++;
+    loopp();
+    displayStats();
+}
+function mouseClicked()
+{
+    switchTiles();
+    
+    if (checkWin())
+    {
+        enter();
+    }
+}
+
+function enter()
+{
+    clear();
+    textAlign(CENTER);
+    
+    textSize(24);
+    text("You win!", width / 2, 300);
+    
+    textSize(14);
+    text("... in " + MovesNum + " moves!", width / 2, 350 );
+}
+
+function displayStats()
+{
+    fill(0);
+    noStroke();
+    text("Moves: " + MovesNum, 10, height - 10);
 }
 
 
@@ -169,29 +207,8 @@ function checkWin()
     return true;
 }
 
-function displayStats()
-{
-    fill(0);
-    noStroke();
-    text("Moves: " + MovesNum, 10, height - 10);
-}
-function loop()
-{
-    clear();
-    
-    drawBoard();
-    displayStats();
-}
 
-function mouseClicked()
-{
-    switchTiles();
-    
-    if (checkWin())
-    {
-        showScene("Win", MovesNum);
-    }
-}
+
 // debugging method...
 function keyPressed()
 {
@@ -199,5 +216,5 @@ function keyPressed()
     {
         board = [1, 2, 3, 4, 5, 6, 7, 0, 8];
     }
+    loopp();
 }
-mouseClicked();
