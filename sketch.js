@@ -14,9 +14,9 @@ function ask() {
     ColsNum = parseInt(prompt("Enter the number of Columns you want:"));
     clear();
     MovesNum=0;
-    displayStats();
     generateBoard();
     drawBoard();
+    displayStats();
 }
 
 function generateBoard() {
