@@ -13,7 +13,7 @@ function ask() {
     RowsNum = parseInt(prompt("Enter the number of Rows you want:"));
     ColsNum = parseInt(prompt("Enter the number of Columns you want:"));
     clear();
-    MovesNum=0;
+    MovesNum = 0;
     generateBoard();
     drawBoard();
     displayStats();
@@ -47,14 +47,11 @@ function generateRandomNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function drawBoard()
-{
-    for(var row = 0; row < RowsNum; row++)
-    {
-        for(var col = 0; col < ColsNum; col++)
-        {
+function drawBoard() {
+    for (var row = 0; row < RowsNum; row++) {
+        for (var col = 0; col < ColsNum; col++) {
             var value = getTileValue(row, col);
-            
+
             var x = boardX + col * squareSize;
             var y = boardY + row * squareSize;
 
@@ -63,16 +60,14 @@ function drawBoard()
     }
 }
 
-function drawTile(x, y, value)
-{
-    fill( value != 0 ? "tan" : "white" );
+function drawTile(x, y, value) {
+    fill(value != 0 ? "tan" : "white");
     stroke("black");
     strokeWeight(1);
-    
+
     rect(x, y, squareSize, squareSize);
-    
-    if (value != 0)
-    {
+
+    if (value != 0) {
         push();
         textAlign(CENTER);
         textSize(24);
@@ -83,83 +78,72 @@ function drawTile(x, y, value)
     }
 }
 
-function getTileValue(row, col)
-{
+function getTileValue(row, col) {
     var index = row * ColsNum + col;
     return board[index];
 }
 
-function setTileValue(row, col, value)
-{
+function setTileValue(row, col, value) {
     var index = row * ColsNum + col;
     board[index] = value;
 }
 
-function loopp()
-{
+function loopp() {
     clear();
-    
+
     drawBoard();
     displayStats();
 }
 
-function findClickedTile(x, y)
-{
-    var col = Math.floor( (x - boardX) / squareSize );
-    var row = Math.floor( (y - boardY) / squareSize );
-    
-    if (col < 0 || col >= ColsNum || row < 0 || row >= RowsNum )
-    {
+function findClickedTile(x, y) {
+    var col = Math.floor((x - boardX) / squareSize);
+    var row = Math.floor((y - boardY) / squareSize);
+
+    if (col < 0 || col >= ColsNum || row < 0 || row >= RowsNum) {
         return null;
     }
-    
-    return { row : row, col : col }
+
+    return { row: row, col: col }
 }
 
-function findEmptyTile(row, col)
-{
+function findEmptyTile(row, col) {
     // check left tile if exists
-    if (col > 0)
-    {
+    if (col > 0) {
         if (getTileValue(row, col - 1) == 0)
-            return { row : row, col : col - 1 };
+            return { row: row, col: col - 1 };
     }
-    
+
     // check right tile if exists
-    if (col < ColsNum - 1)
-    {
+    if (col < ColsNum - 1) {
         if (getTileValue(row, col + 1) == 0)
-            return { row : row, col : col + 1 };
-        
+            return { row: row, col: col + 1 };
+
     }
-    
+
     // check up tile
-    if (row > 0)
-    {
+    if (row > 0) {
         if (getTileValue(row - 1, col) == 0)
-            return { row : row - 1, col : col };
+            return { row: row - 1, col: col };
     }
-    
+
     // check down tile
-    if (row < RowsNum - 1)
-    {
+    if (row < RowsNum - 1) {
         if (getTileValue(row + 1, col) == 0)
-            return { row : row + 1, col : col };
+            return { row: row + 1, col: col };
     }
 
     return null;
 }
 
-function switchTiles()
-{
+function switchTiles() {
     var tile = findClickedTile(mouseX, mouseY);
     if (!tile)
         return;
-    
+
     var emptyTile = findEmptyTile(tile.row, tile.col);
     if (!emptyTile)
         return;
-        
+
     var tileValue = getTileValue(tile.row, tile.col);
     setTileValue(emptyTile.row, emptyTile.col, tileValue);
     setTileValue(tile.row, tile.col, 0);
@@ -167,55 +151,58 @@ function switchTiles()
     loopp();
     displayStats();
 }
-function mouseClicked()
-{
+function mouseClicked() {
     switchTiles();
-    
-    if (checkWin())
-    {
+
+    if (checkWin()) {
         enter();
     }
 }
 
-function enter()
-{
+function enter() {
     clear();
     textAlign(CENTER);
-    
+
     textSize(24);
     text("You win!", width / 2, 300);
-    
+
     textSize(14);
-    text("... in " + MovesNum + " moves!", width / 2, 350 );
+    text("... in " + MovesNum + " moves!", width / 2, 350);
 }
 
-function displayStats()
-{
+function displayStats() {
     fill(0);
     noStroke();
-    document.getElementById("show").innerHTML="Moves: " + MovesNum;
+    document.getElementById("show").innerHTML = "Moves: " + MovesNum;
 }
 
 
-function checkWin()
-{
-    for(var i = 0; i < board.length - 1; i++)
-    {
+function checkWin() {
+    for (var i = 0; i < board.length - 1; i++) {
         if (board[i] != i + 1)
             return false;
     }
-    
+
     return true;
 }
 
-
-
 // debugging method...
-function keyPressed()
-{
-    if (key.toUpperCase() === "X")
-    {
-        board = [1, 2, 3, 4, 5, 6, 7, 0, 8];
+function keyPressed() {
+    if (key.toUpperCase() === "X") {
+        for (let i = 0; i < RowsNum; i++) {
+            for (let j = 0; j < ColsNum; j++) {
+                if ((i != RowsNum - 1 || j != ColsNum - 1) && (i != RowsNum - 1 || j != ColsNum - 2)) {
+                    setTileValue(i, j, j + i * ColsNum + 1);
+                }
+                else if (i == RowsNum - 1 && j == ColsNum - 2) {
+                    setTileValue(i, j, 0);
+                }
+                else if (i == RowsNum - 1 && j == ColsNum - 1) {
+                    setTileValue(i, j, RowsNum * ColsNum - 1);
+                }
+            }
+        }
+        loopp();
     }
     loopp();
 }
