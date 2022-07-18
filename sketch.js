@@ -1,5 +1,5 @@
 function setup() {
-    createCanvas(displayWidth, displayHeight);
+    createCanvas(2000, 2000);
 }
 var RowsNum;
 var ColsNum;
@@ -192,7 +192,7 @@ function displayStats()
 {
     fill(0);
     noStroke();
-    text("Moves: " + MovesNum, 10, height - 10);
+    document.getElementById("show").innerHTML="Moves: " + MovesNum;
 }
 
 
