@@ -177,12 +177,12 @@ function enter() {
     clear();
 
     textSize(24);
-    text("You win!", width / 2, 300);
+    text("You win!", displayWidth / 2, 300);
 
     textSize(14);
-    text("... in " + MovesNum + " moves!", width / 2, 350);
+    text("... in " + MovesNum + " moves!", displayWidth / 2, 350);
     textSize(14);
-    text("...within " + sec + " seconds!", width / 2, 400);
+    text("...within " + sec + " seconds!", displayWidth / 2, 400);
     textAlign(CENTER);
     resetTimer();
 }
