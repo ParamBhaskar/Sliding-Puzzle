@@ -17,6 +17,8 @@ function ask() {
     generateBoard();
     drawBoard();
     displayStats();
+    resetTimer();
+    counting();
 }
 
 function generateBoard() {
@@ -107,32 +109,6 @@ function findClickedTile(x, y) {
 }
 
 function findEmptyTile(row, col) {
-    // check left tile if exists
-    /*if (col > 0) {
-        if (getTileValue(row, col - 1) == 0)
-            return { row: row, col: col - 1 };
-    }
-
-    // check right tile if exists
-    if (col < ColsNum - 1) {
-        if (getTileValue(row, col + 1) == 0)
-            return { row: row, col: col + 1 };
-
-    }
-
-    // check up tile
-    if (row > 0) {
-        if (getTileValue(row - 1, col) == 0)
-            return { row: row - 1, col: col };
-    }
-
-    // check down tile
-    if (row < RowsNum - 1) {
-        if (getTileValue(row + 1, col) == 0)
-            return { row: row + 1, col: col };
-    }
-
-    return null;*/
     let i = 0;
     while (i < ColsNum && getTileValue(row, i) != 0) {
         i++;
@@ -185,13 +161,6 @@ function switchTiles() {
     if (!tile)
         return;
     findEmptyTile(tile.row, tile.col);
-    //var emptyTile = findEmptyTile(tile.row, tile.col);
-    /*if (!emptyTile)
-        return;
-
-    var tileValue = getTileValue(tile.row, tile.col);
-    setTileValue(emptyTile.row, emptyTile.col, tileValue);
-    setTileValue(tile.row, tile.col, 0);*/
 
     loopp();
     displayStats();
@@ -212,7 +181,10 @@ function enter() {
 
     textSize(14);
     text("... in " + MovesNum + " moves!", width / 2, 350);
+    textSize(14);
+    text("...within " + sec + " seconds!", width / 2, 400);
     textAlign(CENTER);
+    resetTimer();
 }
 
 function displayStats() {
@@ -227,7 +199,6 @@ function checkWin() {
         if (board[i] != i + 1)
             return false;
     }
-
     return true;
 }
 
@@ -249,5 +220,27 @@ function keyPressed() {
         }
         loopp();
     }
-    loopp();
+}
+
+var timerr;
+var sec = null;
+function counting() {
+    sec = 0;
+    timerr = setInterval(() => {
+        document.getElementById('timer').innerHTML = "Timer: 00:00:" + sec;
+        sec++;
+        if (sec > 60) {
+            var min = sec / 60;
+            document.getElementById('timer').innerHTML = "Timer: 00:" + Math.floor(sec / 60) + ":" + sec % 60;
+            if (min > 60) {
+                document.getElementById('timer').innerHTML = "Timer: " + Math.floor(min / 60) + ":" + min % 60 + ":" + sec % 60;
+            }
+        }
+    }, 1000);
+
+}
+function resetTimer() {
+    clearInterval(timerr);
+    sec = 0;
+    document.getElementById('timer').innerHTML = "Timer: 00:00:" + sec;
 }
