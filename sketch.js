@@ -108,7 +108,7 @@ function findClickedTile(x, y) {
 
 function findEmptyTile(row, col) {
     // check left tile if exists
-    if (col > 0) {
+    /*if (col > 0) {
         if (getTileValue(row, col - 1) == 0)
             return { row: row, col: col - 1 };
     }
@@ -132,22 +132,67 @@ function findEmptyTile(row, col) {
             return { row: row + 1, col: col };
     }
 
-    return null;
+    return null;*/
+    let i = 0;
+    while (i < ColsNum && getTileValue(row, i) != 0) {
+        i++;
+    }
+    if (col < i && i < ColsNum) {
+        for (let j = i; j > col; j--) {
+            exchange_in_same_row(row, j, j - 1);
+        }
+        MovesNum++;
+    }
+    else if (col > i) {
+        for (let j = i; j < col; j++) {
+            exchange_in_same_row(row, j, j + 1);
+        }
+        MovesNum++;
+    }
+
+    i = 0;
+    while (i < RowsNum && getTileValue(i, col) != 0) {
+        i++;
+    }
+    if (row < i && i < RowsNum) {
+        for (let j = i; j > row; j--) {
+            exchange_in_same_column(col, j, j - 1);
+        }
+        MovesNum++;
+    }
+    else if (row > i) {
+        for (let j = i; j < row; j++) {
+            exchange_in_same_column(col, j, j + 1);
+        }
+        MovesNum++;
+    }
 }
 
+function exchange_in_same_row(row, m, n) {
+    let M = getTileValue(row, m);
+    let N = getTileValue(row, n);
+    setTileValue(row, m, N);
+    setTileValue(row, n, M);
+}
+function exchange_in_same_column(col, m, n) {
+    let M = getTileValue(m, col);
+    let N = getTileValue(n, col);
+    setTileValue(m, col, N);
+    setTileValue(n, col, M);
+}
 function switchTiles() {
     var tile = findClickedTile(mouseX, mouseY);
     if (!tile)
         return;
-
-    var emptyTile = findEmptyTile(tile.row, tile.col);
-    if (!emptyTile)
+    findEmptyTile(tile.row, tile.col);
+    //var emptyTile = findEmptyTile(tile.row, tile.col);
+    /*if (!emptyTile)
         return;
 
     var tileValue = getTileValue(tile.row, tile.col);
     setTileValue(emptyTile.row, emptyTile.col, tileValue);
-    setTileValue(tile.row, tile.col, 0);
-    MovesNum++;
+    setTileValue(tile.row, tile.col, 0);*/
+
     loopp();
     displayStats();
 }
@@ -161,13 +206,13 @@ function mouseClicked() {
 
 function enter() {
     clear();
-    textAlign(CENTER);
 
     textSize(24);
     text("You win!", width / 2, 300);
 
     textSize(14);
     text("... in " + MovesNum + " moves!", width / 2, 350);
+    textAlign(CENTER);
 }
 
 function displayStats() {
